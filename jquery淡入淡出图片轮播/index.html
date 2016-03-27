@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="cn>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+<title>html</title>
+<script style="text/javascript" src="jquery-2.1.1.js"></script>
+<style type="text/css">
+*{margin:0px;padding:0px;}
+/*父级DIV设为相对定位*/
+.center_image{width:520px;height:280px;position:relative;}
+/*子级显示DIV设为绝对定位，使得图片叠加在一起*/
+
+.center_image>div{width:520px;height:280px;position:absolute;transition:opacity 1s ease-in-out;}
+.image{z-index:1;opacity:1;display:block;}
+.image2{opacity:0;}
+/*子级ul设为绝对定位,始终在图片的顶层*/
+.center_image ul{position:fixed;bottom:0px;left:0px;right:0px;
+margin:0 auto;width:520px;list-style-type:none;text-align:center;z-index:3}
+.center_image ul>li{display:inline-block;width:20px;height:20px;text-align:center;
+line-height:20px;cursor:pointer;border-radius:10px;}
+/*切换图片时，索引背景色改变，两个class的顺序不能变*/
+.bgli2{background-color:rgba(0,255,0,0.3);}
+.bgli{background-color:red;}
+
+</style>
+</head>
+
+<body>
+<header><h1 style="text-align:center;">镇江文化馆项目展示</h1></header>
+<!--显示区域-->
+<div class="center_image">
+	<!--轮播图片-->
+	<div class="image2"><a href="#"><img src="1.jpg" width="1366" height="768" title="阅读空间"/></a></div>
+	<div class="image2"><a href="#"><img src="2.jpg" width="1366" height="768" title="互动点播"/></a></div>
+	<div class="image2"><a href="#"><img src="3.jpg" width="1366" height="768" title="稿件"/></a></div>
+	<div class="image2"><a href="#"><img src="4.jpg" width="1366" height="768" title="汇演"/></a></div>
+	<div class="image"><a href="#"><img src="5.jpg" width="1366" height="768"title="首页" /></a></div><!--可修改-->
+	<!--轮播图片索引-->
+	<ul id="slider">
+		<li class="bgli2 bgli">1</li>
+		<li class="bgli2">2</li>
+		<li class="bgli2">3</li>
+		<li class="bgli2">4</li>
+		<li class="bgli2">5</li><!--可修改-->
+	</ul>
+
+</div>
+<script type="text/javascript">
+		/**
+		功能：自动轮播图片，鼠标进入时停止，离开开始，可选择预览
+		*/
+		
+		var n=0;
+		function show(){
+			//获得第一张图片对象和最后一张
+			//var last_image=$(".center_image>div:nth-child(5)");//可修改
+			var first_image=$(".center_image>div:nth-child("+(5-n)+")");
+			//把第一张图片插入到最后面
+			//first_image.insertAfter(last_image);
+			first_image.removeClass("image");
+			first_image.addClass("image2");
+			//图片索引也要改变
+			$("#slider>li:eq("+n+")").removeClass("bgli");
+			n=(n==4)?0:++n;//可修改
+			$("#slider>li:eq("+n+")").addClass("bgli");	
+			$(".center_image>div:nth-child("+(5-n)+")").removeClass("image2")
+			$(".center_image>div:nth-child("+(5-n)+")").addClass("image")
+		}
+	//页面第一次加载完，开始轮播		
+	var interval=window.setInterval('show()',4000);	
+
+	$(document).ready(function(){
+		//当鼠标进入图片内，停止轮播
+		$(".center_image>div").mouseenter(function(){
+			window.clearInterval(interval);
+		
+		});
+		//当鼠标离开图片，开始轮播
+		$(".center_image>div").mouseleave(function(){
+			interval=window.setInterval('show()',4000);	
+		
+		});
+		//当鼠标点击索引，显示指定的图片
+		$(".center_image ul>li").click(function(){
+		
+			var select_n=$(this).text();
+			
+				//获得第一张图片对象和最后一张
+				//var select_image=$(".center_image>div:nth-child("+(6-parseInt(select_n))+")");
+				//var first_image=$(".center_image>div:nth-child(5)");//可修改
+				//把最后图片插入到最前面
+				//select_image.insertAfter(first_image);	
+				//图片索引也要改变
+				$("#slider>li:eq("+n+")").removeClass("bgli");
+				$(".center_image>div:nth-child("+(5-n)+")").removeClass("image");
+				$(".center_image>div:nth-child("+(5-n)+")").addClass("image2");
+				$("#slider>li:eq("+(parseInt(select_n)-1)+")").addClass("bgli");
+				$(".center_image>div:nth-child("+(6-parseInt(select_n))+")").removeClass("image2");
+				$(".center_image>div:nth-child("+(6-parseInt(select_n))+")").addClass("image");
+				//设置下一次显示的图片
+				n=parseInt(select_n)-1;
+		})
+
+	})
+	
+</script>
+</body>
+</html>
